@@ -38,11 +38,12 @@
 
 
             <div class="btn-env">
-                <button type="submit">ENVIAR</button>
+                <button type="submit" id="btn">ENVIAR</button>
             </div>
         </div>
 
     </form>
+
     <script>
         function getValueFront() {
             var cpf = document.getElementById("cpf").value;
@@ -50,32 +51,46 @@
             var email = document.getElementById("email").value;
             var number = document.getElementById("number").value;
 
-
             var select = document.getElementById('env');
             var environment = select.options[select.selectedIndex].text;
 
             var selectPermi = document.getElementById('permissions');
             var permissions = selectPermi.options[selectPermi.selectedIndex].text;
+            if (cpf == "" || name == "" || email == "") {
+                alert('Os campos precisam estar preenchidos')
+            } else {
+                fetch("http://localhost:8000/token", {
+                    method: 'POST',
+                    redirect: 'follow',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "cpf": cpf,
+                        "name": name,
+                        "env": environment,
+                        "permissions": permissions,
+                        "emails": email,
+                        "quantify": number
+                    })
+                }).then((response) => {
+                    // var element = document.getElementById("btn");
+                    // element.classList.add("send");
 
-            fetch("http://localhost:8000/token", {
-                method: 'POST',
-                redirect: 'follow',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "cpf": cpf,
-                    "name": name,
-                    "env": environment,
-                    "permissions": permissions,
-                    "emails": email,
-                    "quantify": number
-                })
-            });
+                    if (response.status == 200)
+                        alert("E-mail enviado para: " + email)
 
-            return false;
+                });
+
+                return false;
+            }
         }
     </script>
+
+    <ul class="squares">
+    </ul>
+    <script src="script.js"></script>
+
 </body>
 
 </html>
