@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsdom": "^18.0.1",
+    "nodemailer": "^6.7.0",
+    "nodemailer-smtp-transport": "^2.7.4",
+    "request": "^2.88.2",
+    "yarn": "^1.22.17"
+  },
+  "name": "projectNode",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT"
+}
