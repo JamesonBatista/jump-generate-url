@@ -82,7 +82,7 @@ app.post("/token", (req, res) => {
                 info.name +
                 " | " +
                 "CPF: " +
-                info.IfResolveEnvrironmentcpf +
+                info.cpf +
                 " |  Envio: " +
                 Hour() +
                 " | E-mail: " +
