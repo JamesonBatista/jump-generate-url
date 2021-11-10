@@ -15,6 +15,7 @@ const bodyParser = require("body-parser");
 const data = require("./user");
 const { Hour, IfResolveEnvrironment } = require("./ifRequests");
 const EnviToken = require("./token");
+const general = require("./general");
 const app = express();
 app.use(cors());
 app.use(
@@ -62,14 +63,32 @@ app.post("/token", (req, res) => {
               var json = JSON.parse(response.body);
               let uri = json.uri.substring(31);
               let uriReplace = uri.replaceAll(" ", "%20");
-              SendToEmail(
-                uriReplace,
-                i,
-                info.env,
-                info.permissions,
-                info.name,
-                info.cpf,
-                info.emails
+
+              var urlBase;
+              if (info.env == "TH") urlBase = general.concatUrl_TH;
+
+              if (info.env == "TU") urlBase = general.concatUrl_TU;
+
+              if (info.env == "TI") urlBase = general.concatUrl_TI;
+
+              var title =
+                "Env: " +
+                info.env +
+                " | " +
+                "Permissão: " +
+                info.permissions +
+                " | " +
+                "User: " +
+                info.name +
+                " | " +
+                "CPF: " +
+                info.IfResolveEnvrironmentcpf +
+                " |  Envio: " +
+                Hour() +
+                " | E-mail: " +
+                i;
+              res.send(
+                JSON.stringify({ title: title, url: urlBase + uriReplace })
               );
             }
           );
@@ -77,8 +96,6 @@ app.post("/token", (req, res) => {
       );
     }
   });
-
-  res.send("texto");
 });
 
 // Listen both http & https ports
