@@ -8,8 +8,23 @@
     "request": "^2.88.2",
     "yarn": "^1.22.17"
   },
-  "name": "projectNode",
+  "name": "projectnode",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {},
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JamesonBatista/jump-generate-url.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/JamesonBatista/jump-generate-url/issues"
+  },
+  "homepage": "https://github.com/JamesonBatista/jump-generate-url#readme",
+  "description": ""
 }
