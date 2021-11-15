@@ -3,7 +3,7 @@ const general = require("./general");
 const { IfResolveEnvrironment, IfResolveBody } = require("./ifRequests");
 const user = require("./user");
 
-function RequestConsent(accessToken, env, permission, cpf) {
+function RequestConsent(accessToken, env, permission, cpf, project) {
   var requestOptions = {
     method: "POST",
     url: IfResolveEnvrironment(env) + general.endpoint_consents,
@@ -12,7 +12,7 @@ function RequestConsent(accessToken, env, permission, cpf) {
       Authorization: "Bearer " + accessToken,
       "Content-Type": "application/json",
     },
-    body: IfResolveBody(permission, cpf),
+    body: IfResolveBody(permission, cpf, project),
     followAllRedirects: true,
     agent: httpsAgent,
   };

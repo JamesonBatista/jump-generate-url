@@ -1,28 +1,32 @@
 const user = require("./user");
 const general = require("./general");
 const body = require("./BodyJson");
-function IfResolveBody(permissions, cpf) {
+function IfResolveBody(permissions, cpf, project) {
   var resultBody;
-  if (permissions == "Todas") resultBody = body.todas(cpf);
+  if (project === "PF") {
+    if (permissions == "Todas") resultBody = body.todas(cpf);
 
-  if (permissions == "Operação de Crédito") resultBody = body.ope_credito(cpf);
+    if (permissions == "Operação de Crédito")
+      resultBody = body.ope_credito(cpf);
 
-  if (permissions == "Cartão de Crédito") resultBody = body.cart_credito(cpf);
+    if (permissions == "Cartão de Crédito") resultBody = body.cart_credito(cpf);
 
-  if (permissions == "Informações Complementares")
-    resultBody = body.info_complementares(cpf);
+    if (permissions == "Informações Complementares")
+      resultBody = body.info_complementares(cpf);
 
-  if (user.permissions == "Dados Cadastrais")
-    resultBody = body.dados_cadastrais(cpf);
+    if (user.permissions == "Dados Cadastrais")
+      resultBody = body.dados_cadastrais(cpf);
 
-  if (permissions == "Dados Cadastrais e Informações complementares")
-    resultBody = body.dados_e_infor(cpf);
+    if (permissions == "Dados Cadastrais e Informações complementares")
+      resultBody = body.dados_e_infor(cpf);
 
-  if (permissions == "Dados da conta") resultBody = body.dados_conta(cpf);
+    if (permissions == "Dados da conta") resultBody = body.dados_conta(cpf);
 
-  if (permissions == "Operação de Credito | Cartão de crédito")
-    resultBody = body.ope_credito_cartao_credit(cpf);
-
+    if (permissions == "Operação de Credito | Cartão de crédito")
+      resultBody = body.ope_credito_cartao_credit(cpf);
+  } else {
+    resultBody = body.generalPJ(cpf);
+  }
   return resultBody;
 }
 
@@ -37,14 +41,19 @@ function IfResolveEnvrironment(env) {
   return urlBase;
 }
 
-function IfResolveAud(env) {
+function IfResolveAud(env, project) {
   var urlBase;
-  if (env == "TH") urlBase = general.aud_TH;
 
-  if (env == "TU") urlBase = general.aud_TU;
+  if (project == "PF") {
+    if (env == "TH") urlBase = general.aud_TH;
 
-  if (env == "TI") urlBase = general.aud_TI;
+    if (env == "TU") urlBase = general.aud_TU;
 
+    if (env == "TI") urlBase = general.aud_TI;
+  } else {
+    if (env == "TU") urlBase = general.aud_PJ_TU;
+    if (env == "TH") urlBase = general.aud_PJ_TH;
+  }
   return urlBase;
 }
 function IfResolveHosts(env) {

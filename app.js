@@ -6,14 +6,11 @@ const https = require("https");
 const http = require("http");
 
 const fs = require("fs");
-const token = require("./token");
-const optionRequest = require("./token");
 const RequestConsent = require("./consents");
 const RequestGenerateUrl = require("./generateUrl");
 const SendToEmail = require("./email");
 const bodyParser = require("body-parser");
-const data = require("./user");
-const { Hour, IfResolveEnvrironment } = require("./ifRequests");
+const { Hour } = require("./ifRequests");
 const EnviToken = require("./token");
 const general = require("./general");
 const app = express();
@@ -31,49 +28,55 @@ app.use(
   })
 );
 
-// create a route for the app
-app.get("/", (req, res) => {
-  res.send("Generate URL /token");
-});
-// console.log(text);
-// another route
-
 app.post("/token", (req, res) => {
   var info = req.body;
 
-  request.post(EnviToken(info.env), (error, response, body) => {
+  var number = parseInt(info.quantify);
+
+  for (let i = 1; i < number + 1; i++) {
     console.log(info);
-    data.cpf = info.cpf;
-    data.name = info.name;
-    data.environment = info.env;
-    data.permissions = info.permissions;
-    var json = JSON.parse(response.body);
-    console.log(json.access_token);
-    var number = parseInt(info.quantify);
-    for (let i = 1; i < number + 1; i++) {
+
+    request.post(EnviToken(info.env), (error, response, body) => {
+      var json = JSON.parse(response.body);
+      // console.log(json.access_token);
       request.post(
-        RequestConsent(json.access_token, info.env, info.permissions, info.cpf),
+        RequestConsent(
+          json.access_token,
+          info.env,
+          info.permissions,
+          info.cpf,
+          info.project
+        ),
         (error, response, body) => {
           var consents = JSON.parse(response.body);
-          console.log(consents.data.consentId);
+          // console.log(consents.data.consentId);
 
           request.post(
-            RequestGenerateUrl(consents.data.consentId, info.env),
+            RequestGenerateUrl(consents.data.consentId, info.env, info.project),
+
             (error, response, body) => {
               var json = JSON.parse(response.body);
               let uri = json.uri.substring(31);
               let uriReplace = uri.replaceAll(" ", "%20");
 
               var urlBase;
-              if (info.env == "TH") urlBase = general.concatUrl_TH;
+              if (info.project == "PF") {
+                if (info.env == "TH") urlBase = general.concatUrl_TH;
 
-              if (info.env == "TU") urlBase = general.concatUrl_TU;
+                if (info.env == "TU") urlBase = general.concatUrl_TU;
 
-              if (info.env == "TI") urlBase = general.concatUrl_TI;
+                if (info.env == "TI") urlBase = general.concatUrl_TI;
+              } else {
+                if (info.env == "TU") urlBase = general.contactPJ_TU;
 
+                if (info.env == "TH") urlBase = general.contactPJ_TH;
+              }
               var title =
                 "Env: " +
                 info.env +
+                " | " +
+                "Projeto: " +
+                info.project +
                 " | " +
                 "Permissão: " +
                 info.permissions +
@@ -87,6 +90,9 @@ app.post("/token", (req, res) => {
                 Hour() +
                 " | E-mail: " +
                 i;
+
+              // SendToEmail(title, urlBase + uriReplace, info.emails, i);
+
               res.send(
                 JSON.stringify({ title: title, url: urlBase + uriReplace })
               );
@@ -94,8 +100,8 @@ app.post("/token", (req, res) => {
           );
         }
       );
-    }
-  });
+    });
+  }
 });
 
 // Listen both http & https ports
@@ -111,7 +117,3 @@ const httpsServer = https.createServer(
 httpServer.listen(8000, () => {
   console.log("HTTP Server running on port 8000");
 });
-
-// httpsServer.listen(443, () => {
-//   console.log("HTTPS Server running on port 443");
-// });
