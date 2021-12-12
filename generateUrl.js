@@ -5,14 +5,13 @@ const {
   IfResolveAud,
   IfResolveEnvrironment,
 } = require("./ifRequests");
-const user = require("./user");
 
 function RequestGenerateUrl(consent, env, project) {
   var genurl = {
     client_id: IfClient_Id(),
     consent_id: consent,
-    redirect_uri: "https://www.bradesco.com.br/mock1",
-    brand: user.TPP.toLowerCase(),
+    redirect_uri: "https://www.bradesco.com.br/mock2",
+    brand: "bradesco",
     aud: IfResolveAud(env, project),
   };
   var requestOptions = {

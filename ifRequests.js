@@ -1,4 +1,3 @@
-const user = require("./user");
 const general = require("./general");
 const body = require("./BodyJson");
 function IfResolveBody(permissions, cpf, project) {
@@ -14,7 +13,7 @@ function IfResolveBody(permissions, cpf, project) {
     if (permissions == "Informações Complementares")
       resultBody = body.info_complementares(cpf);
 
-    if (user.permissions == "Dados Cadastrais")
+    if (permissions == "Dados Cadastrais")
       resultBody = body.dados_cadastrais(cpf);
 
     if (permissions == "Dados Cadastrais e Informações complementares")
@@ -98,12 +97,8 @@ function Hour() {
 
 function IfClient_Id() {
   var clientId;
-  if (user.TPP.toLowerCase() == "bradesco")
-    clientId = general.client_id_BRADECO;
 
-  if (user.TPP.toLowerCase() == "next") clientId = general.client_id_NEXT;
-
-  return clientId;
+  return "2d3d7e39-a219-49f1-bef6-9e673b6106aa";
 }
 
 module.exports = {

@@ -29,77 +29,115 @@ app.use(
 );
 
 app.post("/token", (req, res) => {
+  var urlBase;
+  var title;
   var info = req.body;
-
   var number = parseInt(info.quantify);
-
   for (let i = 1; i < number + 1; i++) {
-    console.log(info);
-
     request.post(EnviToken(info.env), (error, response, body) => {
       var json = JSON.parse(response.body);
-      // console.log(json.access_token);
-      request.post(
-        RequestConsent(
-          json.access_token,
-          info.env,
-          info.permissions,
-          info.cpf,
-          info.project
-        ),
-        (error, response, body) => {
-          var consents = JSON.parse(response.body);
-          // console.log(consents.data.consentId);
+      console.log(info);
+      console.log(` status token: ${response.statusCode}`);
 
-          request.post(
-            RequestGenerateUrl(consents.data.consentId, info.env, info.project),
+      if (response.statusCode == 200) {
+        request.post(
+          RequestConsent(
+            json.access_token,
+            info.env,
+            info.permissions,
+            info.cpf,
+            info.project
+          ),
+          (error, response, body) => {
+            var consents = JSON.parse(response.body);
+            // console.log(consents.data.consentId);
+            console.log(` status consents: ${response.statusCode}`);
 
-            (error, response, body) => {
-              var json = JSON.parse(response.body);
-              let uri = json.uri.substring(31);
-              let uriReplace = uri.replaceAll(" ", "%20");
+            if (response.statusCode == 201) {
+              request.post(
+                RequestGenerateUrl(
+                  consents.data.consentId,
+                  info.env,
+                  info.project
+                ),
 
-              var urlBase;
-              if (info.project == "PF") {
-                if (info.env == "TH") urlBase = general.concatUrl_TH;
+                (error, response, body) => {
+                  console.log(` status generate url: ${response.statusCode}`);
 
-                if (info.env == "TU") urlBase = general.concatUrl_TU;
+                  if (response.statusCode == 200) {
+                    var json = JSON.parse(response.body);
+                    let uri = json.uri.substring(31);
+                    let uriReplace = uri.replaceAll(" ", "%20");
+                    if (info.project == "PF") {
+                      if (info.env == "TH") urlBase = general.concatUrl_TH;
 
-                if (info.env == "TI") urlBase = general.concatUrl_TI;
-              } else {
-                if (info.env == "TU") urlBase = general.contactPJ_TU;
+                      if (info.env == "TU") urlBase = general.concatUrl_TU;
 
-                if (info.env == "TH") urlBase = general.contactPJ_TH;
-              }
-              var title =
-                "Env: " +
-                info.env +
-                " | " +
-                "Projeto: " +
-                info.project +
-                " | " +
-                "Permissão: " +
-                info.permissions +
-                " | " +
-                "User: " +
-                info.name +
-                " | " +
-                "CPF: " +
-                info.cpf +
-                " |  Envio: " +
-                Hour() +
-                " | E-mail: " +
-                i;
+                      if (info.env == "TI") urlBase = general.concatUrl_TI;
+                    } else {
+                      if (info.env == "TU") urlBase = general.contactPJ_TU;
 
-              // SendToEmail(title, urlBase + uriReplace, info.emails, i);
+                      if (info.env == "TH") urlBase = general.contactPJ_TH;
+                    }
+                    title =
+                      "Env: " +
+                      info.env +
+                      " | " +
+                      "Projeto: " +
+                      info.project +
+                      " | " +
+                      "Permissão: " +
+                      info.permissions +
+                      " | " +
+                      "User: " +
+                      info.name +
+                      " | " +
+                      "CPF: " +
+                      info.cpf +
+                      " |  Envio: " +
+                      Hour() +
+                      " | E-mail: " +
+                      i;
 
+                    if (info.checked)
+                      SendToEmail(title, urlBase + uriReplace, info.emails, i);
+
+                    if (i <= 1) {
+                      res.send(
+                        JSON.stringify({
+                          title: title,
+                          url: urlBase + uriReplace,
+                        })
+                      );
+                    }
+                  } else {
+                    res.send(
+                      JSON.stringify({
+                        title: "Error",
+                        url: `Generate url statusCode is ${response.statusCode}`,
+                      })
+                    );
+                  }
+                }
+              );
+            } else {
               res.send(
-                JSON.stringify({ title: title, url: urlBase + uriReplace })
+                JSON.stringify({
+                  title: "Error",
+                  url: `Consents statusCode is ${response.statusCode}`,
+                })
               );
             }
-          );
-        }
-      );
+          }
+        );
+      } else {
+        res.send(
+          JSON.stringify({
+            title: "Error",
+            url: `Token statusCode is ${response.statusCode}`,
+          })
+        );
+      }
     });
   }
 });

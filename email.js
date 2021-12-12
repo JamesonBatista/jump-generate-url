@@ -1,6 +1,7 @@
 const { rootEmail, password } = require("./root");
 var nodemailer = require("nodemailer");
 var smtpTransport = require("nodemailer-smtp-transport");
+const { Hour } = require("./ifRequests");
 
 const SendToEmail = (title, urlBase, email, i) => {
   var transporter = nodemailer.createTransport(
@@ -25,7 +26,7 @@ const SendToEmail = (title, urlBase, email, i) => {
     if (error) {
       console.log(error);
     } else {
-      console.log("*****  OK -  " + i + "  ******\n");
+      console.log("*****  OK -  " + i + "  ******" + Hour() + " \n");
     }
   });
 };

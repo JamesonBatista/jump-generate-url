@@ -16,15 +16,20 @@
             <input type="text" id="cpf" placeholder="CPF" aria-label="envio=name" class="cpf">
             <input type="text" id="name" placeholder="Nome" aria-label="envio=name">
             <input type="text" id="email" placeholder="E-mails seprados por vírgula" aria-label="envio=email">
-            <select id="env-project">
-                <option value="vw">PJ</option>
-                <option value="audi" selected>PF</option>
-            </select>
-            <select id="env">
-                <option value="vw">TU</option>
-                <option value="audi" selected>TH</option>
-            </select>
-
+            <div class="options">
+                <select id="env-project">
+                    <option value="vw">PJ</option>
+                    <option value="audi" selected>PF</option>
+                </select>
+                <select id="env">
+                    <option value="vw">TU</option>
+                    <option value="audi" selected>TH</option>
+                </select>
+                <div id="check">
+                    <input type="checkbox" id="scales" name="scales" checked>
+                    <label for="scales">E-mail</label>
+                </div>
+            </div>
             <select id="permissions">
                 <option value="1">Operação de Crédito</option>
                 <option value="2">Cartão de Crédito</option>
@@ -36,9 +41,7 @@
                 <option value="8" selected>Todas</option>
             </select>
 
-
             <input type="number" id="number" aria-label="envio=name" value="1">
-
 
             <div class="btn-env">
                 <button type="submit" id="btn">ENVIAR</button>
@@ -52,25 +55,33 @@
     </div>
     <script>
         function getValueFront() {
+            console.log("loading...")
             var childRemove = document.getElementById('text-url')
             childRemove.removeChild(childRemove.childNodes[0])
+            addTextUrl("Gerando url aguarde...", "")
+
             var cpf = document.getElementById("cpf").value;
             var name = document.getElementById("name").value;
             var email = document.getElementById("email").value;
+
+
             var number = document.getElementById("number").value;
             cpf = cpf.replaceAll(",", "");
             cpf = cpf.replaceAll("-", "");
             cpf = cpf.replaceAll(".", "")
+
             var select = document.getElementById('env');
             var environment = select.options[select.selectedIndex].text;
 
+            var x = document.querySelector('#scales')
 
             var selectProject = document.getElementById('env-project');
             var environmentProject = selectProject.options[selectProject.selectedIndex].text;
 
             var selectPermi = document.getElementById('permissions');
             var permissions = selectPermi.options[selectPermi.selectedIndex].text;
-            if (cpf == "" || name == "" || email == "" || cpf < 11) {
+
+            if (cpf == "" || name == "" || cpf < 11) {
                 alert('Os campos precisam estar preenchidos, ou CPF com 11 dígitos verifique as informações.')
             } else {
                 var bodyParse = JSON.stringify({
@@ -81,7 +92,9 @@
                     "emails": email,
                     "project": environmentProject,
                     "quantify": number,
-                    "TPP": "bradesco"
+                    "TPP": "bradesco",
+                    "checked": x.checked,
+                    "hour": Hour()
                 });
 
                 fetch("http://localhost:8000/token", {
@@ -93,9 +106,14 @@
                     body: bodyParse
                 }).then(response => response.json())
                     .then((data) => {
-                        // console.log(data)
-                        // console.log(JSON.parse(bodyParse))
-                        addTextUrl(data.url)
+                        console.log(`${number} url:`, data)
+                        var childRemove = document.getElementById('text-url')
+                        childRemove.removeChild(childRemove.childNodes[0])
+                        if (data.title == "Error") {
+                            addTextUrl("error", "")
+                        } else {
+                            addTextUrl("URL enviada com sucesso!", data.url)
+                        }
                     })
 
                 return false;
@@ -103,15 +121,23 @@
         }
     </script>
     <script>
-        function addTextUrl(url) {
+        function addTextUrl(text, url) {
+
             const randomColor = Math.floor(Math.random() * 16777215).toString(16);
 
             var divEle = document.createElement("a")
 
-            var textNode = document.createTextNode("URL LINK")
+            if (text == "error") {
+                var textNode = document.createTextNode("Erro na requisição!!!")
+
+            } else {
+                var textNode = document.createTextNode(text)
+            }
             // link.appendChild(textNode)
             divEle.appendChild(textNode)
-            divEle.title = "URL LINK"
+            divEle.title = "Clique para abrir a URL"
+            divEle.setAttribute('target', '_blank');
+
             divEle.href = url;
 
             document.getElementById('text-url').appendChild(divEle);
@@ -121,7 +147,37 @@
     <ul class="squares">
     </ul>
     <script src="script.js"></script>
+    <script>
+        function Hour() {
+            function zero(value) {
+                if (value < 9) return "0" + value;
+                else return value;
+            }
 
+            var dataAtual = new Date();
+            var dia = dataAtual.getDate();
+            var mes = dataAtual.getMonth() + 1;
+            var ano = dataAtual.getFullYear();
+            var horas = dataAtual.getHours();
+            var minutos = dataAtual.getMinutes();
+            var seconds = dataAtual.getSeconds();
+
+            var date_full =
+                zero(dia) +
+                "/" +
+                zero(mes) +
+                "/" +
+                ano +
+                "  " +
+                zero(horas) +
+                ":" +
+                zero(minutos) +
+                ":" +
+                zero(seconds);
+
+            return date_full;
+        }
+    </script>
 </body>
 
 </html>

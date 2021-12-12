@@ -5,6 +5,7 @@
     "jsdom": "^18.0.1",
     "nodemailer": "^6.7.0",
     "nodemailer-smtp-transport": "^2.7.4",
+    "nodemon": "^2.0.15",
     "request": "^2.88.2",
     "yarn": "^1.22.17"
   },

@@ -1,7 +1,6 @@
 const httpsAgent = require("./Agents");
 const general = require("./general");
 const { IfResolveEnvrironment, IfResolveBody } = require("./ifRequests");
-const user = require("./user");
 
 function RequestConsent(accessToken, env, permission, cpf, project) {
   var requestOptions = {
