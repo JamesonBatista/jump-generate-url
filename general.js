@@ -28,4 +28,5 @@ module.exports = {
     "https://pj.api.tu.prebanco.com.br/bradesco/open-banking/authorize",
   contactPJ_TH:
     "https://pj.api.prebanco.com.br/bradesco/open-banking/authorize",
+  expirationDateTime: "2022-12-21T08:30:00Z",
 };

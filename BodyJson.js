@@ -1,3 +1,5 @@
+const general = require("./general");
+
 function todas(cpfUser) {
   let cpf = cpfUser;
   var cpf1 = cpf.replaceAll(".", "");
@@ -41,7 +43,7 @@ function todas(cpfUser) {
         "ACCOUNTS_TRANSACTIONS_READ",
         "RESOURCES_READ",
       ],
-      expirationDateTime: "2021-12-21T08:30:00Z",
+      expirationDateTime: "2022-12-21T08:30:00Z",
     },
   });
 }
@@ -81,7 +83,7 @@ function ope_credito(cpfUser) {
       ],
       expirationDateTime: "2021-12-21T08:30:00Z",
       transactionFromDateTime: "2021-10-20T00:00:00Z",
-      transactionToDateTime: "2021-10-20T23:59:59Z",
+      transactionToDateTime: general.expirationDateTime,
     },
   });
 }
@@ -109,7 +111,7 @@ function cart_credito(cpfUser) {
       ],
       expirationDateTime: "2021-12-21T08:30:00Z",
       transactionFromDateTime: "2021-10-20T00:00:00Z",
-      transactionToDateTime: "2021-10-20T23:59:59Z",
+      transactionToDateTime: general.expirationDateTime,
     },
   });
 }
@@ -154,7 +156,7 @@ function ope_credito_cartao_credit(cpfUser) {
       ],
       expirationDateTime: "2021-12-21T08:30:00Z",
       transactionFromDateTime: "2021-10-20T00:00:00Z",
-      transactionToDateTime: "2021-10-20T23:59:59Z",
+      transactionToDateTime: general.expirationDateTime,
     },
   });
 }
@@ -176,7 +178,7 @@ function info_complementares(cpfUser) {
       permissions: ["CUSTOMERS_PERSONAL_ADITTIONALINFO_READ", "RESOURCES_READ"],
       expirationDateTime: "2021-12-21T08:30:00Z",
       transactionFromDateTime: "2021-10-20T00:00:00Z",
-      transactionToDateTime: "2021-10-20T23:59:59Z",
+      transactionToDateTime: general.expirationDateTime,
     },
   });
 }
@@ -202,7 +204,7 @@ function dados_cadastrais(cpfUser) {
       ],
       expirationDateTime: "2021-12-21T08:30:00Z",
       transactionFromDateTime: "2021-10-20T00:00:00Z",
-      transactionToDateTime: "2021-10-20T23:59:59Z",
+      transactionToDateTime: general.expirationDateTime,
     },
   });
 }
@@ -226,9 +228,7 @@ function dados_e_infor(cpfUser) {
         "CUSTOMERS_PERSONAL_ADITTIONALINFO_READ",
         "RESOURCES_READ",
       ],
-      expirationDateTime: "2021-12-21T08:30:00Z",
-      transactionFromDateTime: "2021-10-20T00:00:00Z",
-      transactionToDateTime: "2021-10-20T23:59:59Z",
+      expirationDateTime: general.expirationDateTime,
     },
   });
 }
@@ -255,9 +255,7 @@ function dados_conta(cpfUser) {
         "ACCOUNTS_TRANSACTIONS_READ",
         "RESOURCES_READ",
       ],
-      expirationDateTime: "2021-12-21T08:30:00Z",
-      transactionFromDateTime: "2021-10-20T00:00:00Z",
-      transactionToDateTime: "2021-10-20T23:59:59Z",
+      expirationDateTime: general.expirationDateTime,
     },
   });
 }
@@ -280,7 +278,7 @@ function generalPJ(cpfUser) {
       },
       businessEntity: {
         document: {
-          identification: 86081459000182,
+          identification: 36446668000104,
           rel: "CNPJ",
         },
       },
@@ -312,9 +310,7 @@ function generalPJ(cpfUser) {
         "INVOICE_FINANCINGS_SCHEDULED_INSTALMENTS_READ",
         "RESOURCES_READ",
       ],
-      expirationDateTime: "2022-10-21T08:30:00Z",
-      transactionFromDateTime: "2021-09-01T00:00:00Z",
-      transactionToDateTime: "2021-09-01T23:59:59Z",
+      expirationDateTime: general.expirationDateTime,
     },
   });
 }
