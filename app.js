@@ -101,16 +101,16 @@ app.post("/token", (req, res) => {
                       i;
 
                     if (info.checked)
-                      SendToEmail(title, urlBase + uriReplace, info.emails, i);
+                      if (i <= 1) {
+                        // SendToEmail(title, urlBase + uriReplace, info.emails, i);
 
-                    if (i <= 1) {
-                      res.send(
-                        JSON.stringify({
-                          title: title,
-                          url: urlBase + uriReplace,
-                        })
-                      );
-                    }
+                        res.send(
+                          JSON.stringify({
+                            title: title,
+                            url: urlBase + uriReplace,
+                          })
+                        );
+                      }
                   } else {
                     res.send(
                       JSON.stringify({
