@@ -102,7 +102,12 @@ app.post("/token", (req, res) => {
 
                     if (info.checked)
                       if (i <= 1) {
-                        // SendToEmail(title, urlBase + uriReplace, info.emails, i);
+                        SendToEmail(
+                          title,
+                          urlBase + uriReplace,
+                          info.emails,
+                          i
+                        );
 
                         res.send(
                           JSON.stringify({
